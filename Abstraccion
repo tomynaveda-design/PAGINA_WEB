@@ -1,0 +1,13 @@
+class Persona:
+    def __init__(self, nombre, dni):
+        self.nombre = nombre
+        self.dni = dni
+
+    def mostrar_rol(self):
+        # Si alguien llama a esto desde "Persona", el programa falla a propósito
+        raise NotImplementedError("Debes definir este método en la clase hija (Cliente o Mecanico)")
+
+class Cliente(Persona):
+    def mostrar_rol(self):
+        return f"Soy el cliente {self.nombre}"
+    

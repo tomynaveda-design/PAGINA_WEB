@@ -1,0 +1,11 @@
+class Persona:
+    def __init__(self, nombre, dni):
+        self.nombre = nombre
+        self.dni = dni
+
+class Mecanico(Persona): # Aquí ocurre la HERENCIA
+    def __init__(self, nombre, dni, especialidad):
+        # Usamos los datos que ya sabe manejar el "Padre"
+        super().__init__(nombre, dni)
+        # Agregamos lo nuevo
+        self.especialidad = especialidad

@@ -1,0 +1,11 @@
+class Reparacion:
+    def __init__(self, costo_base):
+        self.costo_base = costo_base
+
+    def calcular_total(self):
+        return self.costo_base
+
+class ReparacionConDescuento(Reparacion): # Polimorfismo
+    def calcular_total(self):
+        # La misma función, pero con otro resultado
+        return self.costo_base * 0.90
