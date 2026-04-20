@@ -1,0 +1,15 @@
+class Vehiculo:
+    def __init__(self, patente, marca):
+        # Usamos el guion bajo para decir "esto es privado"
+        self._patente = patente 
+        self.marca = marca
+
+    # Forma simple de encapsular: una función para obtener el dato
+    def get_patente(self):
+        return self._patente
+
+    # Una función para cambiar el dato con validación
+    def set_patente(self, nueva_patente):
+        if len(nueva_patente) > 5:
+            self._patente = nueva_patente
+            
