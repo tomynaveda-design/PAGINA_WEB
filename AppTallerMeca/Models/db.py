@@ -9,7 +9,7 @@ def conexion_db():
             user="root",
             password="", # <--- ASEGURATE QUE ESTA SEA TU CLAVE
             database="BDE",
-            port=3007
+            port=3307
         )
         
         if conexion.is_connected():
