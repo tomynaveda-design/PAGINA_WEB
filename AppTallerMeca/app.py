@@ -1,38 +1,27 @@
-import sqlite3
 
-# CREAR / ABRIR BASE DE DATOS
-conn = sqlite3.connect("taller.db")
+from flask import Flask, render_template, request, redirect
+from Models.parking import Vehiculo
 
-# CREAR CURSOR (para ejecutar SQL)
-cursor = conn.cursor()
+app = Flask(__name__)
 
-# CREAR TABLA
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS autos (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    marca TEXT,
-    modelo TEXT
-)
-""")
+@app.route('/')
+def index():
+    # Esta es la página principal
+    return "<h1>Bienvenido al Estacionamiento</h1><p>El sistema está online.</p>"
 
-# GUARDAR CAMBIOS
-conn.commit()
+@app.route('/registrar', methods=['POST'])
+def registrar():
+    patente = request.form.get('patente')
+    modelo = request.form.get('modelo')
+    
+    if patente:
+        nuevo_auto = Vehiculo(patente, modelo)
+        nuevo_auto.registrar_entrada()
+        return f"Vehículo {patente} registrado con éxito."
+    return "Error: Falta la patente."
 
-# CERRAR CONEXIÓN
-conn.close()
-
-print("Base de datos creada correctamente")
-
-
-
-
-
-
-
-
-
-
-
+if __name__ == '__main__':
+    app.run(debug=True)
 
 
 
