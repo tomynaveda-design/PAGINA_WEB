@@ -8,7 +8,7 @@ def conexion_db():
             host="localhost",
             user="root",
             password="", # <--- ASEGURATE QUE ESTA SEA TU CLAVE
-            database="BDE"
+            database="BDE",
             port=3007
         )
         
