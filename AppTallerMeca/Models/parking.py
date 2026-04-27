@@ -1,5 +1,10 @@
 from Models.db import conexion_db
 
+try:
+    from Models.db import conexion_db
+except ModuleNotFoundError:
+    from db import conexion_db
+
 class Vehiculo:
     def __init__(self, patente, modelo=None, id=None, hora_entrada=None, estado='Estacionado'):
         self.id = id
