@@ -23,6 +23,24 @@ with app.app_context():
     db.create_all()
     print("¡Tablas creadas correctamente en bde_tc!")
 
+@app.route('/vehiculos', methods=['GET'])
+def listar_vehiculos():
+    # 1. Consultamos todos los vehículos usando SQLAlchemy
+    lista = Vehiculo.query.all()
+    
+    # 2. Formateamos los datos para que se vean como JSON
+    resultado = []
+    for v in lista:
+        resultado.append({
+            "patente": v.patente,
+            "marca": v.marca,
+            "modelo": v.modelo
+        })
+    
+    # 3. Retornamos la respuesta
+    return {"vehiculos": resultado}, 200
+
 if __name__ == "__main__":
     # Iniciamos el servidor en el puerto 5000
-    app.run(debug=True, port=5000)
+   if __name__ == '__main__':
+    app.run(debug=True, port=5001)
