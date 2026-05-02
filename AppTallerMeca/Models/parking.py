@@ -1,18 +1,26 @@
-from .db import db
+from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
+
+db = SQLAlchemy()
 
 class Vehiculo(db.Model):
-    __tablename__ = "vehiculos"
-
-    id = db.Column(db.Integer, primary_key=True)
-    patente = db.Column(db.String(10), nullable=False)
+    __tablename__ = 'vehiculos'
+    patente = db.Column(db.String(10), primary_key=True)
+    marca = db.Column(db.String(50))
     modelo = db.Column(db.String(50))
-    ocupado = db.Column(db.Boolean, default=False)
+    movimientos = db.relationship('Movimiento', backref='vehiculo', lazy=True)
 
-# CLASE SEPARADA (Sin espacios extra a la izquierda)
-class Usuario(db.Model):
-    __tablename__ = 'usuarios'
-    
+class Espacio(db.Model):
+    __tablename__ = 'espacios'
     id = db.Column(db.Integer, primary_key=True)
-    nombre = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(100), unique=True, nullable=False)
-    password = db.Column(db.String(100), nullable=False)
+    numero = db.Column(db.String(10), unique=True, nullable=False)
+    estado = db.Column(db.String(20), default='libre') # 'libre' o 'ocupado'
+
+class Movimiento(db.Model):
+    __tablename__ = 'movimientos'
+    id = db.Column(db.Integer, primary_key=True)
+    patente_vehiculo = db.Column(db.String(10), db.ForeignKey('vehiculos.patente'), nullable=False)
+    espacio_id = db.Column(db.Integer, db.ForeignKey('espacios.id'), nullable=False)
+    fecha_ingreso = db.Column(db.DateTime, default=datetime.now)
+    fecha_egreso = db.Column(db.DateTime, nullable=True)
+    monto_total = db.Column(db.Float, default=0.0)
