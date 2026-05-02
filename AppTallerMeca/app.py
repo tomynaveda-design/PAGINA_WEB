@@ -6,6 +6,9 @@ from routers.products_routes import products_bp
 # 1. Creamos la aplicación
 app = Flask(__name__)
 
+app = Flask(__name__)
+app.secret_key = 'mi_clave_secreta_super_segura' # AGREGÁ ESTO
+
 # 2. Cargamos la configuración (puerto 3307, base bde_tc, etc.)
 app.config.from_object(Config)
 
