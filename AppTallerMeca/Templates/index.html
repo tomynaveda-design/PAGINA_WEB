@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Taller Meca - Gestión</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; margin: 40px; background-color: #f0f2f5; }
+        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); max-width: 600px; margin: auto; }
+        input { display: block; margin-bottom: 15px; width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
+        button { background: #28a745; color: white; border: none; padding: 12px; width: 100%; cursor: pointer; border-radius: 6px; font-weight: bold; }
+        table { width: 100%; margin-top: 30px; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background-color: #007bff; color: white; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>Registrar Entrada de Vehículo</h2>
+    <form action="/guardar" method="POST">
+        <input type="text" name="patente" placeholder="Patente (Ej: ABC-123)" required>
+        <input type="text" name="modelo" placeholder="Modelo (Ej: Fiat Cronos)" required>
+        <button type="submit">Cargar al Sistema</button>
+    </form>
+
+    <h3>Vehículos en el Taller</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Patente</th>
+                <th>Modelo</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Aquí Flask va a "dibujar" cada auto que encuentre en la DB -->
+            {% for auto in lista_autos %}
+            <tr>
+                <td>{{ auto.patente }}</td>
+                <td>{{ auto.modelo }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>
