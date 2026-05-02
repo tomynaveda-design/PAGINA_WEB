@@ -14,7 +14,7 @@ class Espacio(db.Model):
     __tablename__ = 'espacios'
     id = db.Column(db.Integer, primary_key=True)
     numero = db.Column(db.String(10), unique=True, nullable=False)
-    estado = db.Column(db.String(20), default='libre') # 'libre' o 'ocupado'
+    estado = db.Column(db.String(20), default='libre')
 
 class Movimiento(db.Model):
     __tablename__ = 'movimientos'
