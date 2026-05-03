@@ -1,7 +1,11 @@
+import os
+
 class Config:
-    # Esta es la ruta para que Python encuentre tu MySQL
-    # Formato: mysql+pymysql://usuario:contraseña@localhost:puerto/nombre_base
-    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:@localhost:3306/bde_tc'
+    # Ruta con el puerto 3307 de tu XAMPP
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL') or 'mysql+pymysql://root:@localhost:3307/bde_tc'
     
-    # Esto se pone en False para que Flask no consuma recursos extra rastreando cambios
+    # Desactivar el rastreo de modificaciones para mejorar el rendimiento
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    
+    # Clave secreta opcional (útil si después usas sesiones o formularios protegidos)
+    SECRET_KEY = os.getenv('SECRET_KEY') or 'clave_secreta_muy_dificil'

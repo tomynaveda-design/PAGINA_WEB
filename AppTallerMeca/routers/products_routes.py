@@ -1,6 +1,8 @@
 from flask import Blueprint, render_template, request, redirect, session
-from Models.db import db
-from Models.parking import Vehiculo, Usuario
+# IMPORTANTE: Cambiamos las rutas de importación para que coincidan con tu proyecto actual
+from modelos import db, Vehiculo, Espacio 
+# Nota: Si no tenés una clase "Usuario" en modelos.py, el login va a fallar.
+# Por ahora uso las que pasaste antes.
 
 products_bp = Blueprint('products', __name__)
 
@@ -11,11 +13,12 @@ def index():
         return redirect('/login')
     
     autos_db = Vehiculo.query.all()
-    usuarios_db = Usuario.query.all()
+    # Cambiamos la lógica para mostrar los espacios (cocheras) en lugar de usuarios
+    espacios_db = Espacio.query.all()
     
     return render_template('index.html', 
                          lista_autos=autos_db, 
-                         lista_usuarios=usuarios_db,
+                         lista_espacios=espacios_db,
                          nombre_usuario=session.get('usuario_nombre'))
 
 # --- 2. LOGIN ---
@@ -25,42 +28,45 @@ def vista_login():
 
 @products_bp.route('/login-proceso', methods=['POST'])
 def login_proceso():
-    # .strip() elimina espacios invisibles que a veces causan error
     ema = request.form.get('email', '').strip()
     pas = request.form.get('password', '').strip()
     
-    usuario_encontrado = Usuario.query.filter_by(email=ema, password=pas).first()
-    
-    if usuario_encontrado:
-        session['usuario_id'] = usuario_encontrado.id
-        session['usuario_nombre'] = usuario_encontrado.nombre
-        return redirect('/')
-    else:
-        return "Email o contraseña incorrectos. <a href='/login'>Volver a intentar</a>"
+    # IMPORTANTE: Asegurate de tener la clase Usuario en tu modelos.py
+    # Si no la tenés, esta parte va a tirar error.
+    try:
+        from modelos import Usuario
+        usuario_encontrado = Usuario.query.filter_by(email=ema, password=pas).first()
+        
+        if usuario_encontrado:
+            session['usuario_id'] = usuario_encontrado.id
+            session['usuario_nombre'] = usuario_encontrado.nombre
+            return redirect('/')
+        else:
+            return "Email o contraseña incorrectos. <a href='/login'>Volver a intentar</a>"
+    except ImportError:
+        return "Error: La tabla de Usuarios no está definida en modelos.py"
 
-# --- 3. REGISTRO (LA CLAVE PARA EVITAR LOS NULLS) ---
+# --- 3. REGISTRO ---
 @products_bp.route('/registro')
 def vista_registro():
     return render_template('registro.html')
 
 @products_bp.route('/registrar-usuario', methods=['POST'])
 def registrar_usuario():
-    # Obtenemos los datos asegurándonos de que no sean None
     nom = request.form.get('nombre', '').strip()
     ema = request.form.get('email', '').strip()
     pas = request.form.get('password', '').strip()
     
-    # Solo intentamos guardar si el usuario escribió algo en los 3 campos
     if nom and ema and pas:
-        nuevo_user = Usuario(nombre=nom, email=ema, password=pas)
         try:
+            from modelos import Usuario
+            nuevo_user = Usuario(nombre=nom, email=ema, password=pas)
             db.session.add(nuevo_user)
             db.session.commit()
-            # Al terminar de registrar, lo mandamos al login para que entre oficialmente
             return redirect('/login')
         except Exception as e:
             db.session.rollback()
-            return f"Error al registrar en la base de datos: {e}"
+            return f"Error al registrar: {e}"
     else:
         return "Error: Todos los campos son obligatorios. <a href='/registro'>Volver a intentar</a>"
 
@@ -79,7 +85,8 @@ def guardar():
     patente_f = request.form.get('patente')
     modelo_f = request.form.get('modelo')
     
-    nuevo_vehiculo = Vehiculo(patente=patente_f, modelo=modelo_f)
+    # Ajustamos a los campos de tu clase Vehiculo en modelos.py
+    nuevo_vehiculo = Vehiculo(patente=patente_f, modelo=modelo_f, marca="Genérico")
     
     try:
         db.session.add(nuevo_vehiculo)
