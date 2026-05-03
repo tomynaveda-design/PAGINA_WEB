@@ -24,3 +24,9 @@ class Movimiento(db.Model):
     fecha_ingreso = db.Column(db.DateTime, default=datetime.now)
     fecha_egreso = db.Column(db.DateTime, nullable=True)
     monto_total = db.Column(db.Float, default=0.0)
+
+class Espacio(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    numero = db.Column(db.String(50))
+    estado = db.Column(db.String(20))
+    patente = db.Column(db.String(7), nullable=True) # <--- AGREGAR ESTA LÍNEA
