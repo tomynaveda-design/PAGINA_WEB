@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Playa de Estacionamiento - Registro</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --accent: #38bdf8;
+            --bg-dark: #0f172a;
+            --glass: rgba(30, 41, 59, 0.7);
+        }
+        body { 
+            background: radial-gradient(circle at top right, #1e293b, #0f172a); 
+            color: #f8fafc; 
+            font-family: 'Inter', sans-serif; 
+            min-height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+        }
+        .glass-nav { 
+            background: var(--glass); 
+            backdrop-filter: blur(12px); 
+            border-bottom: 1px solid rgba(255,255,255,0.05); 
+        }
+        .form-container { flex-grow: 1; display: flex; align-items: center; justify-content: center; padding: 40px 20px; }
+        
+        .glass-card { 
+            background: rgba(30, 41, 59, 0.4); 
+            backdrop-filter: blur(20px); 
+            border: 1px solid rgba(255,255,255,0.1); 
+            border-radius: 28px; 
+            padding: 45px; 
+            width: 100%; 
+            max-width: 480px; 
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7); 
+        }
+
+        .input-group-text {
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: var(--accent);
+            border-radius: 12px 0 0 12px;
+        }
+
+        .form-control { 
+            background: rgba(15, 23, 42, 0.6); 
+            border: 1px solid rgba(255,255,255,0.1); 
+            color: white; 
+            border-radius: 12px; 
+            padding: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus { 
+            background: rgba(15, 23, 42, 0.9); 
+            border-color: var(--accent); 
+            color: white; 
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.2); 
+        }
+
+        .btn-submit { 
+            background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%); 
+            border: none; 
+            color: #0f172a; 
+            font-weight: 800; 
+            border-radius: 14px; 
+            padding: 16px; 
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+        }
+        
+        .btn-submit:hover { 
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 15px 30px -5px rgba(56, 189, 248, 0.4); 
+            color: #0f172a;
+        }
+
+        .cochera-badge {
+            background: rgba(56, 189, 248, 0.1);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            padding: 15px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark glass-nav">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="/"><i class="bi bi-p-square-fill me-2 text-info"></i>Playa de Estacionamiento</a>
+            <div class="ms-auto">
+                <a href="/" class="btn btn-link text-secondary text-decoration-none small"><i class="bi bi-chevron-left"></i> Volver</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="form-container">
+        <div class="glass-card">
+            <div class="text-center mb-5">
+                <div class="bg-info bg-opacity-10 rounded-circle d-inline-flex p-3 mb-3">
+                    <i class="bi bi-car-front text-info h2 mb-0"></i>
+                </div>
+                <h2 class="fw-bold text-white mb-1">Registro de Entrada</h2>
+                <p class="text-secondary opacity-75">Sincronizado con 30 cocheras activas</p>
+            </div>
+
+            <form id="formIngreso">
+                <div class="mb-4">
+                    <label class="small text-uppercase fw-bold opacity-50 mb-2 d-block">Identificación</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-tag"></i></span>
+                        <input type="text" class="form-control" id="patente" placeholder="PATENTE" maxlength="7" 
+                               oninput="this.value = this.value.toUpperCase()" required>
+                    </div>
+                </div>
+
+                <div class="mb-5">
+                    <label class="small text-uppercase fw-bold opacity-50 mb-2 d-block">Ubicación Asignada</label>
+                    <div class="cochera-badge">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-geo-alt text-info me-3 h4 mb-0"></i>
+                            <div class="small">Espacio del <br><strong>1 al 30</strong></div>
+                        </div>
+                        <input type="number" class="form-control text-center fw-bold" id="espacio_id" 
+                               min="1" max="30" style="width: 80px;" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-submit w-100">
+                    Registrar Vehículo <i class="bi bi-arrow-right-short ms-1"></i>
+                </button>
+            </form>
+            <div id="resultado" class="mt-4"></div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('formIngreso').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const resDiv = document.getElementById('resultado');
+            resDiv.innerHTML = '<div class="text-center"><div class="spinner-border spinner-border-sm text-info"></div></div>';
+
+            const data = {
+                patente: document.getElementById('patente').value,
+                espacio_id: parseInt(document.getElementById('espacio_id').value)
+            };
+
+            fetch('/ingreso', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+            .then(res => res.json())
+            .then(resData => {
+                if(resData.mensaje) {
+                    resDiv.innerHTML = `<div class="alert alert-success bg-success bg-opacity-10 border-success text-success border-0 rounded-4 p-3"><i class="bi bi-check-circle-fill me-2"></i>${resData.mensaje}</div>`;
+                    document.getElementById('formIngreso').reset();
+                } else {
+                    resDiv.innerHTML = `<div class="alert alert-danger bg-danger bg-opacity-10 border-danger text-danger border-0 rounded-4 p-3"><i class="bi bi-exclamation-triangle-fill me-2"></i>${resData.error}</div>`;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
